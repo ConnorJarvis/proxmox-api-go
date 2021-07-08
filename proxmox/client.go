@@ -464,6 +464,10 @@ func (c *Client) ResumeVm(vmr *VmRef) (exitStatus string, err error) {
 	return c.StatusChangeVm(vmr, "resume")
 }
 
+func (c *Client) RebootVm(vmr *VmRef) (exitStatus string, err error) {
+	return c.StatusChangeVm(vmr, "reboot")
+}
+
 func (c *Client) DeleteVm(vmr *VmRef) (exitStatus string, err error) {
 	return c.DeleteVmParams(vmr, nil)
 }
