@@ -1226,3 +1226,79 @@ func (c *Client) UpdateVMHA(vmr *VmRef, haState string) (exitStatus interface{},
 
 	return
 }
+
+//ApplySDNChanges - Apply sdn controller changes & reload.
+func (c *Client) ApplySDNChanges() error {
+
+	url := "/cluster/sdn"
+	_, err := c.session.Put(url, nil, nil, nil)
+
+	return err
+}
+
+//GetVNetList - SDN vnets index.
+func (c *Client) GetVNetList() (list map[string]interface{}, err error) {
+	err = c.GetJsonRetryable("/cluster/sdn/vnets", &list, 3)
+	return
+}
+
+//CreateVNet - Create a new sdn vnet object.
+func (c *Client) CreateVNet(vnet string, zone string, alias string, tag int64, vlanaware bool) error {
+
+	params := map[string]interface{}{"vnet": vnet, "zone": zone, "vlanaware": vlanaware}
+	if alias != "" {
+		params["alias"] = alias
+	}
+	if tag != 0 {
+		params["tag"] = tag
+	}
+	reqbody := ParamsToBody(params)
+	url := "/cluster/sdn/vnets"
+	_, err := c.session.Post(url, nil, nil, &reqbody)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+//GetVNet - Read sdn vnet configuration.
+func (c *Client) GetVNet(vnet string) (list map[string]interface{}, err error) {
+	url := fmt.Sprintf("/cluster/sdn/vnets/%s", vnet)
+	err = c.GetJsonRetryable(url, &list, 3)
+	return
+}
+
+//UpdateVNet - Update sdn vnet object configuration.
+func (c *Client) UpdateVNet(vnet string, alias string, delete string, digest string, tag int64, vlanaware bool, zone string) error {
+
+	params := map[string]interface{}{"vnet": vnet, "vlanaware": vlanaware}
+	if alias != "" {
+		params["alias"] = alias
+	}
+	if delete != "" {
+		params["delete"] = delete
+	}
+	if digest != "" {
+		params["digest"] = digest
+	}
+	if tag != 0 {
+		params["tag"] = tag
+	}
+	if zone != "" {
+		params["zone"] = zone
+	}
+	reqbody := ParamsToBody(params)
+	url := fmt.Sprintf("/cluster/sdn/vnets/%s", vnet)
+
+	_, err := c.session.Put(url, nil, nil, &reqbody)
+
+	return err
+}
+
+//DeleteVNet - Delete sdn vnet object configuration.
+func (c *Client) DeleteVNet(vnet string) error {
+	url := fmt.Sprintf("/cluster/sdn/vnets/%s", vnet)
+	_, err := c.session.Delete(url, nil, nil)
+	return err
+}
