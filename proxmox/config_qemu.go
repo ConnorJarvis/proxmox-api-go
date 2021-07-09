@@ -79,16 +79,16 @@ type ConfigQemu struct {
 	Sshkeys      string `json:"sshkeys"`
 
 	// arrays are hard, support 16 interfaces for now
-	Ipconfig0 string `json:"ipconfig0"`
-	Ipconfig1 string `json:"ipconfig1"`
-	Ipconfig2 string `json:"ipconfig2"`
-	Ipconfig3 string `json:"ipconfig3"`
-	Ipconfig4 string `json:"ipconfig4"`
-	Ipconfig5 string `json:"ipconfig5"`
-	Ipconfig6 string `json:"ipconfig6"`
-	Ipconfig7 string `json:"ipconfig7"`
-	Ipconfig8 string `json:"ipconfig8"`
-	Ipconfig9 string `json:"ipconfig9"`
+	Ipconfig0  string `json:"ipconfig0"`
+	Ipconfig1  string `json:"ipconfig1"`
+	Ipconfig2  string `json:"ipconfig2"`
+	Ipconfig3  string `json:"ipconfig3"`
+	Ipconfig4  string `json:"ipconfig4"`
+	Ipconfig5  string `json:"ipconfig5"`
+	Ipconfig6  string `json:"ipconfig6"`
+	Ipconfig7  string `json:"ipconfig7"`
+	Ipconfig8  string `json:"ipconfig8"`
+	Ipconfig9  string `json:"ipconfig9"`
 	Ipconfig10 string `json:"ipconfig10"`
 	Ipconfig11 string `json:"ipconfig11"`
 	Ipconfig12 string `json:"ipconfig12"`
@@ -498,10 +498,10 @@ func NewConfigQemuFromApi(vmr *VmRef, client *Client) (config *ConfigQemu, err e
 	if _, isSet := vmConfig["tags"]; isSet {
 		tags = vmConfig["tags"].(string)
 	}
-        args := ""
-        if _, isSet := vmConfig["args"]; isSet {
-                args = vmConfig["args"].(string)
-        }
+	args := ""
+	if _, isSet := vmConfig["args"]; isSet {
+		args = vmConfig["args"].(string)
+	}
 
 	bios := "seabios"
 	if _, isSet := vmConfig["bios"]; isSet {
@@ -733,7 +733,7 @@ func NewConfigQemuFromApi(vmr *VmRef, client *Client) (config *ConfigQemu, err e
 
 		// Get storage type for disk
 		var storageStatus map[string]interface{}
-		storageStatus, err = client.GetStorageStatus(vmr, storageName)
+		storageStatus, err = client.GetStorageStatus(vmr.node, storageName)
 		if err != nil {
 			log.Fatal(err)
 			return nil, err
