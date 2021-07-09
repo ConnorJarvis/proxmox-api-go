@@ -224,10 +224,13 @@ func (c *Client) GetVmConfig(vmr *VmRef) (vmConfig map[string]interface{}, err e
 	return
 }
 
-func (c *Client) GetStorageStatus(node string, storageName string) (storageStatus map[string]interface{}, err error) {
-
+func (c *Client) GetStorageStatus(vmr *VmRef, storageName string) (storageStatus map[string]interface{}, err error) {
+	err = c.CheckVmRef(vmr)
+	if err != nil {
+		return nil, err
+	}
 	var data map[string]interface{}
-	url := fmt.Sprintf("/nodes/%s/storage/%s/status", node, storageName)
+	url := fmt.Sprintf("/nodes/%s/storage/%s/status", vmr.node, storageName)
 	err = c.GetJsonRetryable(url, &data, 3)
 	if err != nil {
 		return nil, err
@@ -252,6 +255,34 @@ func (c *Client) GetStorageContent(vmr *VmRef, storageName string) (data map[str
 	if data["data"] == nil {
 		return nil, errors.New("Storage Content not readable")
 	}
+	return
+}
+
+func (c *Client) GetNodeStorageContent(node string, storageName string) (data map[string]interface{}, err error) {
+
+	url := fmt.Sprintf("/nodes/%s/storage/%s/content", node, storageName)
+	err = c.GetJsonRetryable(url, &data, 3)
+	if err != nil {
+		return nil, err
+	}
+	if data["data"] == nil {
+		return nil, errors.New("Storage Content not readable")
+	}
+	return
+}
+
+func (c *Client) GetNodeStorageStatus(node string, storageName string) (storageStatus map[string]interface{}, err error) {
+
+	var data map[string]interface{}
+	url := fmt.Sprintf("/nodes/%s/storage/%s/status", node, storageName)
+	err = c.GetJsonRetryable(url, &data, 3)
+	if err != nil {
+		return nil, err
+	}
+	if data["data"] == nil {
+		return nil, errors.New("Storage STATUS not readable")
+	}
+	storageStatus = data["data"].(map[string]interface{})
 	return
 }
 

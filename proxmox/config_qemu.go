@@ -733,7 +733,7 @@ func NewConfigQemuFromApi(vmr *VmRef, client *Client) (config *ConfigQemu, err e
 
 		// Get storage type for disk
 		var storageStatus map[string]interface{}
-		storageStatus, err = client.GetStorageStatus(vmr.node, storageName)
+		storageStatus, err = client.GetStorageStatus(vmr, storageName)
 		if err != nil {
 			log.Fatal(err)
 			return nil, err
