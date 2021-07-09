@@ -224,13 +224,10 @@ func (c *Client) GetVmConfig(vmr *VmRef) (vmConfig map[string]interface{}, err e
 	return
 }
 
-func (c *Client) GetStorageStatus(vmr *VmRef, storageName string) (storageStatus map[string]interface{}, err error) {
-	err = c.CheckVmRef(vmr)
-	if err != nil {
-		return nil, err
-	}
+func (c *Client) GetStorageStatus(node string, storageName string) (storageStatus map[string]interface{}, err error) {
+
 	var data map[string]interface{}
-	url := fmt.Sprintf("/nodes/%s/storage/%s/status", vmr.node, storageName)
+	url := fmt.Sprintf("/nodes/%s/storage/%s/status", node, storageName)
 	err = c.GetJsonRetryable(url, &data, 3)
 	if err != nil {
 		return nil, err
