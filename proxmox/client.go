@@ -554,10 +554,10 @@ func (c *Client) DeleteVmParams(vmr *VmRef, params map[string]interface{}) (exit
 
 func (c *Client) CreateQemuVm(node string, vmParams map[string]interface{}) (exitStatus string, err error) {
 	// Create VM disks first to ensure disks names.
-	createdDisks, createdDisksErr := c.createVMDisks(node, vmParams)
-	if createdDisksErr != nil {
-		return "", createdDisksErr
-	}
+	// createdDisks, createdDisksErr := c.createVMDisks(node, vmParams)
+	// if createdDisksErr != nil {
+	// 	return "", createdDisksErr
+	// }
 
 	// Then create the VM itself.
 	reqbody := ParamsToBody(vmParams)
@@ -580,10 +580,11 @@ func (c *Client) CreateQemuVm(node string, vmParams map[string]interface{}) (exi
 	exitStatus, err = c.WaitForCompletion(taskResponse)
 	// Delete VM disks if the VM didn't create.
 	if exitStatus != "OK" {
-		deleteDisksErr := c.DeleteVMDisks(node, createdDisks)
-		if deleteDisksErr != nil {
-			return "", deleteDisksErr
-		}
+		// deleteDisksErr := c.DeleteVMDisks(node, createdDisks)
+		// if deleteDisksErr != nil {
+		// 	return "", deleteDisksErr
+		// }
+		return
 	}
 
 	return
