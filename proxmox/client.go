@@ -286,6 +286,21 @@ func (c *Client) GetNodeStorageStatus(node string, storageName string) (storageS
 	return
 }
 
+func (c *Client) GetStorageConfiguration(storage string) (storageConfig map[string]interface{}, err error) {
+
+	var data map[string]interface{}
+	url := fmt.Sprintf("/storage/%s", storage)
+	err = c.GetJsonRetryable(url, &data, 3)
+	if err != nil {
+		return nil, err
+	}
+	if data["data"] == nil {
+		return nil, errors.New("Storage CONFIG not readable")
+	}
+	storageConfig = data["data"].(map[string]interface{})
+	return
+}
+
 func (c *Client) GetVmSpiceProxy(vmr *VmRef) (vmSpiceProxy map[string]interface{}, err error) {
 	err = c.CheckVmRef(vmr)
 	if err != nil {
