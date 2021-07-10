@@ -785,11 +785,11 @@ func (c *Client) MoveLxcDisk(vmr *VmRef, disk string, storage string) (exitStatu
 	return
 }
 
-func (c *Client) MoveQemuDisk(vmr *VmRef, disk string, storage string) (exitStatus interface{}, err error) {
+func (c *Client) MoveQemuDisk(vmr *VmRef, disk string, storage string, delete bool) (exitStatus interface{}, err error) {
 	if disk == "" {
 		disk = "virtio0"
 	}
-	reqbody := ParamsToBody(map[string]interface{}{"disk": disk, "storage": storage, "delete": true})
+	reqbody := ParamsToBody(map[string]interface{}{"disk": disk, "storage": storage, "delete": delete})
 	url := fmt.Sprintf("/nodes/%s/%s/%d/move_disk", vmr.node, vmr.vmType, vmr.vmId)
 	resp, err := c.session.Post(url, nil, nil, &reqbody)
 	if err == nil {
