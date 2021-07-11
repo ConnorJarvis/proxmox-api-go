@@ -14,6 +14,7 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"net/url"
+	"time"
 )
 
 var Debug = new(bool)
@@ -30,6 +31,8 @@ type Session struct {
 	CsrfToken  string
 	AuthToken  string // Combination of user, realm, token ID and UUID
 	Headers    http.Header
+	LoginTime  int64
+	Username   string
 }
 
 func NewSession(apiUrl string, hclient *http.Client, tls *tls.Config) (session *Session, err error) {
@@ -145,6 +148,8 @@ func (s *Session) Login(username string, password string, otp string) (err error
 	}
 	s.AuthTicket = dat["ticket"].(string)
 	s.CsrfToken = dat["CSRFPreventionToken"].(string)
+	s.LoginTime = time.Now().Unix()
+	s.Username = username
 	return nil
 }
 
@@ -196,7 +201,9 @@ func (s *Session) Do(req *http.Request) (*http.Response, error) {
 		dr, _ := httputil.DumpResponse(resp, true)
 		log.Printf("<<<<<<<<<< RESULT:\n%v", string(dr))
 	}
-
+	if time.Now().Unix()-s.LoginTime > 5400 {
+		s.Login(s.Username, s.AuthTicket, "")
+	}
 	if resp.StatusCode < 200 || resp.StatusCode > 299 {
 		return resp, errors.New(resp.Status)
 	}
