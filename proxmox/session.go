@@ -122,6 +122,8 @@ func (s *Session) Login(username string, password string, otp string) (err error
 	if otp != "" {
 		reqUser["otp"] = otp
 	}
+	s.LoginTime = time.Now().Unix()
+	s.Username = username
 	reqbody := ParamsToBody(reqUser)
 	olddebug := *Debug
 	*Debug = false // don't share passwords in debug log
@@ -148,8 +150,7 @@ func (s *Session) Login(username string, password string, otp string) (err error
 	}
 	s.AuthTicket = dat["ticket"].(string)
 	s.CsrfToken = dat["CSRFPreventionToken"].(string)
-	s.LoginTime = time.Now().Unix()
-	s.Username = username
+
 	return nil
 }
 
