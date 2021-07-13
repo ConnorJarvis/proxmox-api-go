@@ -79,6 +79,14 @@ func (vmr *VmRef) HaState() string {
 	return vmr.haState
 }
 
+func (c *Client) TicketLoginTime() int64 {
+	return c.session.LoginTime
+}
+
+func (c *Client) GetTicket() string {
+	return c.session.AuthTicket
+}
+
 func NewVmRef(vmId int) (vmr *VmRef) {
 	vmr = &VmRef{vmId: vmId, node: "", vmType: ""}
 	return

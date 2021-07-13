@@ -202,9 +202,7 @@ func (s *Session) Do(req *http.Request) (*http.Response, error) {
 		dr, _ := httputil.DumpResponse(resp, true)
 		log.Printf("<<<<<<<<<< RESULT:\n%v", string(dr))
 	}
-	if time.Now().Unix()-s.LoginTime > 5400 {
-		s.Login(s.Username, s.AuthTicket, "")
-	}
+
 	if resp.StatusCode < 200 || resp.StatusCode > 299 {
 		return resp, errors.New(resp.Status)
 	}
