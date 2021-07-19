@@ -968,14 +968,15 @@ func (c *Client) GetExecStatus(vmr *VmRef, pid string) (status map[string]interf
 	return
 }
 
-// SetQemuFirewallOptions - Set Firewall options.
-func (c *Client) SetQemuFirewallOptions(vmr *VmRef, fwOptions map[string]interface{}) (exitStatus interface{}, err error) {
+// SetFirewallOptions - Set Firewall options.
+func (c *Client) SetFirewallOptions(vmr *VmRef, fwOptions map[string]interface{}) (exitStatus interface{}, err error) {
 	err = c.CheckVmRef(vmr)
 	if err != nil {
 		return nil, err
 	}
 	reqbody := ParamsToBody(fwOptions)
-	url := fmt.Sprintf("/nodes/%s/qemu/%d/firewall/options", vmr.node, vmr.vmId)
+
+	url := fmt.Sprintf("/nodes/%s/%s/%d/firewall/options", vmr.node, vmr.vmType, vmr.vmId)
 	resp, err := c.session.Put(url, nil, nil, &reqbody)
 	if err == nil {
 		taskResponse, err := ResponseJSON(resp)
@@ -987,13 +988,13 @@ func (c *Client) SetQemuFirewallOptions(vmr *VmRef, fwOptions map[string]interfa
 	return
 }
 
-// GetQemuFirewallOptions - Get VM firewall options.
-func (c *Client) GetQemuFirewallOptions(vmr *VmRef) (firewallOptions map[string]interface{}, err error) {
+// GetFirewallOptions - Get VM firewall options.
+func (c *Client) GetFirewallOptions(vmr *VmRef) (firewallOptions map[string]interface{}, err error) {
 	err = c.CheckVmRef(vmr)
 	if err != nil {
 		return nil, err
 	}
-	url := fmt.Sprintf("/nodes/%s/qemu/%d/firewall/options", vmr.node, vmr.vmId)
+	url := fmt.Sprintf("/nodes/%s/%s/%d/firewall/options", vmr.node, vmr.vmType, vmr.vmId)
 	resp, err := c.session.Get(url, nil, nil)
 	if err == nil {
 		firewallOptions, err := ResponseJSON(resp)
@@ -1005,14 +1006,14 @@ func (c *Client) GetQemuFirewallOptions(vmr *VmRef) (firewallOptions map[string]
 	return
 }
 
-// CreateQemuIPSet - Create new IPSet
-func (c *Client) CreateQemuIPSet(vmr *VmRef, params map[string]interface{}) (exitStatus interface{}, err error) {
+// CreateIPSet - Create new IPSet
+func (c *Client) CreateIPSet(vmr *VmRef, params map[string]interface{}) (exitStatus interface{}, err error) {
 	err = c.CheckVmRef(vmr)
 	if err != nil {
 		return nil, err
 	}
 	reqbody := ParamsToBody(params)
-	url := fmt.Sprintf("/nodes/%s/qemu/%d/firewall/ipset", vmr.node, vmr.vmId)
+	url := fmt.Sprintf("/nodes/%s/%s/%d/firewall/ipset", vmr.node, vmr.vmType, vmr.vmId)
 	resp, err := c.session.Post(url, nil, nil, &reqbody)
 	if err == nil {
 		taskResponse, err := ResponseJSON(resp)
@@ -1024,13 +1025,13 @@ func (c *Client) CreateQemuIPSet(vmr *VmRef, params map[string]interface{}) (exi
 	return
 }
 
-// GetQemuIPSet - List IPSets
-func (c *Client) GetQemuIPSet(vmr *VmRef) (ipsets map[string]interface{}, err error) {
+// GetIPSet - List IPSets
+func (c *Client) GetIPSet(vmr *VmRef) (ipsets map[string]interface{}, err error) {
 	err = c.CheckVmRef(vmr)
 	if err != nil {
 		return nil, err
 	}
-	url := fmt.Sprintf("/nodes/%s/qemu/%d/firewall/ipset", vmr.node, vmr.vmId)
+	url := fmt.Sprintf("/nodes/%s/%s/%d/firewall/ipset", vmr.node, vmr.vmType, vmr.vmId)
 	resp, err := c.session.Get(url, nil, nil)
 	if err == nil {
 		ipsets, err := ResponseJSON(resp)
@@ -1042,14 +1043,14 @@ func (c *Client) GetQemuIPSet(vmr *VmRef) (ipsets map[string]interface{}, err er
 	return
 }
 
-// AddIPToQemuIPSet - Add IP or Network to IPSet.
-func (c *Client) AddIPToQemuIPSet(vmr *VmRef, ipSetName string, params map[string]interface{}) (exitStatus interface{}, err error) {
+// AddIPToIPSet - Add IP or Network to IPSet.
+func (c *Client) AddIPToIPSet(vmr *VmRef, ipSetName string, params map[string]interface{}) (exitStatus interface{}, err error) {
 	err = c.CheckVmRef(vmr)
 	if err != nil {
 		return nil, err
 	}
 	reqbody := ParamsToBody(params)
-	url := fmt.Sprintf("/nodes/%s/qemu/%d/firewall/ipset/%s", vmr.node, vmr.vmId, ipSetName)
+	url := fmt.Sprintf("/nodes/%s/%s/%d/firewall/ipset/%s", vmr.node, vmr.vmType, vmr.vmId, ipSetName)
 	resp, err := c.session.Post(url, nil, nil, &reqbody)
 	if err == nil {
 		taskResponse, err := ResponseJSON(resp)
